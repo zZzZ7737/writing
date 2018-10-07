@@ -17,7 +17,7 @@ const pageSize = 15
 
 export default {
   created() {
-    console.log(this.$site)
+    // console.log(this.$site)
   },
   components: {
     NavLink,
@@ -26,7 +26,7 @@ export default {
   },
   computed: {
     blogs() {
-      let pages = this.$site.pages.filter(page=>!page.frontmatter.layout)
+      const pages = this.$site.pages.filter(page=>!page.frontmatter.layout)
       return pages.slice(pageSize*(this.activePageNum-1), pageSize*this.activePageNum)
     },
   },

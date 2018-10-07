@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'LiZ2z',
+  title: 'LiZ2z\'Blog',
   description: 'LiZ2z Blog',
   github:'LiZ2z',
   head: [
