@@ -5,9 +5,9 @@ module.exports = {
   head: [
     ['link', { rel: 'icon', href: '/logo.ico' }],
     ['link', { rel: 'shortcut icon', href: '/logo.ico' }],
-    ['meta',{name:"keywords", content:'LiZ2z,blog,博客,vuepress'}]
+    ['meta',{name:"keywords", content:'LiZ2z,blog,博客,vuepress'}],
+    ['meta',{'http-equiv': 'Page-Enter', content: 'revealTrans(duration=1.0,transtion=12)'}]
   ],
-  
   themeConfig: {
     logo: '/logo.png',
     headerNav: [

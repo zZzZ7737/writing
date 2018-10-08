@@ -5,7 +5,7 @@ tags: ['前端', '模块化']
 # 模块化
 
 ::: tip 概述
-如今javascript有AMD、CMD两种模块化规范,这篇博客我们来说一下CMD规范的应用。
+如今javascript有AMD、CMD两种模块化规范，这篇博客我们来说一下CMD规范的应用。
 :::
 
 现在的前端应用开发大多数基于webpack构建，开发过程中，我们将js代码分成一个个文件模块，通过`module.exports`导出数据，在另一个文件用`require`进行引用。开发完成后，webpack将所有引用的js文件打包后生成一个boundle.js。那么，`module.exports`、`require`的原理是啥呢？
@@ -95,10 +95,10 @@ moduleMap.fileTwo() // 输出 'msg from one'
   /**
    * @function - 一个全局的立即执行函数
    * 
-   * @params modules 所有的js文件模块组成的数组
+   * @params modules 所有的js文件模块组成Map对象
    */
  (function (modules) { // webpackBootstrap
-  // 1. 用于存储，缓存 所有模块代码
+  // 1. 用于缓存已经被require()的模块代码 的执行结果
    // The module cache
    var installedModules = {};
    //2. 定义 require 函数  The require function
