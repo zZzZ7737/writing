@@ -1,5 +1,6 @@
 ---
 tags: ['javascript','类型','类型检测']
+createTime: '2018-10-22'
 ---
 
 # 类型检测
@@ -72,7 +73,7 @@ const isArray = (function () {
   }
 }())
 ```
-## 5. `object`类型检测
+## 7. `object`类型检测
 除了上面的类型外，使用`typeof`操作符检测任何值，都会返回`'object'`，所以想检测一个变量是不是普通对象，需要做多步验证。
 ```javascript
 const isPlainObj = function(t) {
@@ -83,8 +84,48 @@ const isPlainObj = function(t) {
 ```
 #### 字面量对象的检测
 有的时候我们想检测一个对象是不是通过字面量方式或者`new Object()`创建的，可以通过如下方法：
-```
-// const obj = {}
-// const obj = new Object
+```javascript
+// const a = {}
+// const b = new Object
+// function X() {}
+// const c = new X
+
+function isRawObject(t) {
+  if (typeof t !== 'object' || t === null) return false
+  let last = first = proto =  Object.getPrototypeOf(t)
+  while(proto) {
+    last = proto
+    proto = Object.getPrototypeOf(proto)
+  }
+  return last === first
+}
 function
+```
+## 8. 判断`NaN`
+`NaN`是一个特殊的数值。检测一个变量是不是`NaN`，常用的方法如下：
+```javascript
+isNaN(t) && t !== t//只有NaN类型才不会等于自身
+```
+不可单独用`isNaN()`来检测，因为`isNaN()`会将传入的参数先用`Number`函数转换后，再进行检测，所有不能转换成数值类型的参数都会被判断成`NaN`。
+
+如果浏览器原生支持`es6`的`Object.is()`方法，可以用过下面的函数检测：
+```javascript
+function isNaN(t){
+  return Object.is(t, NaN)
+}
+```
+## 9. 判断一个值存不存在
+有时我们写代码时判断一个值不存在，会直接使用如下写法：
+```javascript
+if(!t)
+```
+需要注意的是，如果传入的参数`t=0`，也是会被认为是不存在的。
+
+如果我们只是想忽略`undefined`、`null`、`''`(空字符串)、`NaN`，则可以用下面函数：
+```javascript
+function isValidate(t) {
+  if(t===0) return true
+  if(typeof t === 'boolean') return true
+  return !!t      //   !!NaN === false
+}
 ```

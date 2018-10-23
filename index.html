@@ -1,33 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
 </head>
+
 <body>
-  
+
   <script>
+    var arr = [null, void 0, '', NaN, ' ', 'a','-1','0','1',   0, 1, -1,function () {}, {}, new Object(), false, true]
 
-    var arr = ['a', 0, null, void 0, function(){}, {}, new Object(),false, NaN]
-
-
-
-    const isPlainObj = function(t) {
-      if(!t) return false
-      let constructor = t.constructor
-      while(constructor) {
-        console.log(constructor)
-        constructor = Object.getPrototypeOf(constructor.prototype).constructor
-      }
-      return t.constructor === constructor
-    }
 
     arr.forEach(item => {
-      console.log(isPlainObj(item))
+      console.log(isValidate(item))
     })
 
+    function isValidate(t) {
+      if (t === 0) return true
+      if (typeof t === 'boolean') return true
+      return !!t
+    }
   </script>
 </body>
+
 </html>
