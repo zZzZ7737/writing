@@ -11,18 +11,16 @@
 <body>
 
   <script>
-    var arr = [null, void 0, '', NaN, ' ', 'a','-1','0','1',   0, 1, -1,function () {}, {}, new Object(), false, true]
-
-
-    arr.forEach(item => {
-      console.log(isValidate(item))
-    })
-
-    function isValidate(t) {
-      if (t === 0) return true
-      if (typeof t === 'boolean') return true
-      return !!t
+    function test(a, b){
+      a=1
+      console.log(a)
+      console.log(arguments[0])
+      console.log(arguments)
     }
+    test(2)
+
+
+
   </script>
 </body>
 

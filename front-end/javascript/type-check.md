@@ -1,6 +1,7 @@
 ---
-tags: ['javascript','类型','类型检测']
+tags: ['javascript','类型检测']
 createTime: '2018-10-22'
+eject: arr = [null, void 0, '', NaN, ' ', 'a','-1','0','1',   0, 1, -1,function () {}, {}, new Object(), false, true]
 ---
 
 # 类型检测
