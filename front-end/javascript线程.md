@@ -24,7 +24,7 @@ function two() {
   setTimeout(()=>{
     console.log(2)
   })
-}
++}
 function three() {
   setTimeout(()=>{
     console.log(3)
@@ -57,3 +57,5 @@ javascript执行环境有一个专用线程负责管理时间延迟函数，当�
 ![avatar](./imgs/event-loop.4.png)
 
 请注意，在3000ms后将函数推入异步任务队列，这意味着不一定会立即执行，如果此时javascript线程内还有很长很多的同步代码要执行，这个异步函数必须等到所有的同步任务执行完才能被推入javascript线程中执行，这就是为什么`setTimeout`延迟有时不能严格的按照设置的延迟时间进行执行。
+### requestAnimationFrame异步
+`requestAnimationFrame`函数也只是按照屏幕刷新的时间间隔将异步任务推入到异步任务队列，而不是按照刷新时间立即执行

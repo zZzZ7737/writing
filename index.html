@@ -2,79 +2,79 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
-  <style>
-    *{
-      margin:0;
-      padding:0;
-    }
-    .bd-ct .main-warp {
-            background-color: #17E7B6;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
         }
-        .bd-ct .right, .bd-ct .left{
-            background-color: #F7075D;
-        }
-        .bd-ct .main-warp, .right, .left {
-            padding: 20px 0;
-            text-align: center;
-        }
-    
-        .bd-ct {
-            overflow: hidden;
-        }
-        .bd-ct .main {
-            float: left;
+
+        html,
+        body,
+        #app {
+            height: 100%;
             width: 100%;
+
         }
-        .bd-ct .main-warp {
-            margin: 0 210px 0 210px;
+
+        #app {
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .bd-ct .left {
-            float: left;
-            margin-left: -100%;
-            width: 200px;
+
+        .center {
+            width: 300px;
+            height: 300px;
+            background: #ccc;
+            transition: ease all 3s;
         }
-        .bd-ct .right {
-            float: left;
-            margin-left: -200px;
-            width: 200px;
+
+        .none {
+            opacity: 1;
         }
-   
-  </style>
+
+        .show {
+            opacity: 0;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="bd-ct">
-        <div class="main">
-            <div class="main-warp">主栏</div>
-        </div>
-        <div class="left">左栏</div>
-        <div class="right">右栏</div>
-    </div>
-    //css
-        
-    <script>
-    const div = document.querySelector('.left')
-    setTimeout(()=>{
-        console.log(3333)
-    })
-    div.onclick = function(){
-        console.log(2222)
+    <div id='app'>
+        <div class="center"></div>
 
-    }
-    setTimeout(()=>{
-        console.log(123)
-    })
-    
-    for(let i = 0; i< 10000; i++) {
-        console.log(1+111+123+21312)
-    }
-    console.log(1)
-    
-    
+    </div>
+
+    <script>
+        const div = document.querySelector('.center')
+        div.setAttribute('class', 'none center')
+
+        for(let i = 0; i< 10000; i++) {
+            console.log(1.3+0.123+0.1312+1.31*6)
+        }
+        div.setAttribute('class', 'show center')
+
+        // var start = +new Date()
+
+        // setTimeout(() => {
+        //     console.log(+new Date - start)
+
+        //     if(+new Date - start < 4) {
+        //         requestAnimationFrame(()=>{
+        //             div.setAttribute('class', 'show center')
+
+        //         })
+        //         return
+        //     }
+        //     div.setAttribute('class', 'show center')
+
+        // })
+
+      
     </script>
 
 </body>
