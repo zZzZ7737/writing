@@ -4,7 +4,7 @@
 
     <BlogList :blogs='blogs' />
 
-    <Pagination :size='pageSize' :total='blogs.length' @on-pager-change='onPagerChange'/>
+    <Pagination :size='pageSize' :total='$site.pages.length' @on-pager-change='onPagerChange'/>
   </div>
 </template>
 
@@ -17,7 +17,15 @@ const pageSize = 15
 
 export default {
   created() {
-    // console.log(this.$site)
+    console.log(this.$site)
+    const pages = []
+    this.$site.pages.forEach(page=> {
+      if(page.frontmatter.createTime) {
+        
+      }else{
+        pages.push(page)
+      }
+    })
   },
   components: {
     NavLink,
