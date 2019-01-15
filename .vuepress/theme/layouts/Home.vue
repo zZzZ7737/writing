@@ -20,6 +20,7 @@ export default {
     console.log(this.$site)
     const pages = []
     this.$site.pages.forEach(page=> {
+      if(page.frontmatter.layout) return
       if(page.frontmatter.createTime) {
         
       }else{
