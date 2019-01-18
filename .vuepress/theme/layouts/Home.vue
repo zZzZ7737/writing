@@ -17,17 +17,15 @@ const pageSize = 15
 
 export default {
   created() {
-    console.log(this.$site)
-    const pages = []
-    this.$site.pages.forEach(page=> {
-      if(page.frontmatter.layout) return
-      if(page.frontmatter.createTime) {
-        
-      }else{
-        pages.push(page)
-      }
-    })
+      // 根据创建时间对博客进行排序
+    const pages = this.$site.pages.filter(page=>!page.frontmatter.layout)
+    this.pages = pages.sort((c,n)=> {
+        const cTime = c.frontmatter.createTime || '1999-01-01'
+        const nTime = n.frontmatter.createTime || '1999-01-01'
+        return new Date(...nTime.split('-')).getTime() - new Date(...cTime.split('-')).getTime()
+      })
   },
+ 
   components: {
     NavLink,
     BlogList,
@@ -35,8 +33,7 @@ export default {
   },
   computed: {
     blogs() {
-      const pages = this.$site.pages.filter(page=>!page.frontmatter.layout)
-      return pages.slice(pageSize*(this.activePageNum-1), pageSize*this.activePageNum)
+      return this.pages.slice(pageSize*(this.activePageNum-1), pageSize*this.activePageNum)
     },
   },
   data() {
