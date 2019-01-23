@@ -11,5 +11,7 @@ createTime: '2019-01-23'
 
 有人会说，既然string或number类型不是对象，那为什么可以通过`.`操作符来对其进行操作呢？那是因为javascript引擎会自动调用`new String()`或`new Number()`将其转换成对象，然后进行操作。
 ```javascript
-'abc'.length === new String('abc').length // true 3
+'abc'.length  //  3
+// =>
+new String('abc').length //  3
 ```
