@@ -2,6 +2,9 @@
 tags: ['javascript', '基础知识']
 createTime: '2018-10-30'
 ---
+
+参考：[Tasks, microtasks, queues and schedules](https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/?utm_source=html5weekly)
+
 # javascript线程&异步&Event Loop
 最近虽然自己没有面试，但是为了提高自己，看了不少人的面试题，多多少少会提到事件循环（Event Loop）这个概念，于是，各种搜索学习。这就把自己的领悟的东西记一下，不一定都对，但也是代表现阶段的水平。
 ## 为什么javascript要是单线程的
