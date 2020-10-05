@@ -5,14 +5,14 @@
 ## 在浏览器中输入一个网址后，发生了什么？
 
 1. 浏览器通过 DNS 解析查询域名的 ip 地址
+
 2. 向查询到的 IP 地址发起 http 请求
+
 3. 服务器响应请求，并返回资源
 
-4. 浏览器解析返回的 HTML 数据，如果遇到 CSS 或者 JS 资源则暂停解析，等待资源加载完成
+4. 浏览器解析返回的 HTML 数据，如果遇到 CSS 或者 JS 资源则暂停解析，等待资源加载完成，随后浏览器将 HTML 解析为 DOM，将 CSS 解析为 CSSOM，之后合并为 Render tree，然后根据 render tree 进行渲染
 
-5. 浏览器将 HTML 解析为 DOM tree，将 CSS 解析为 CSS tree，之后合并为 Render tree，然后根据 render tree 进行渲染
-
-6. 整个过程结束之后，浏览器关闭 TCP 连接
+5. 整个过程结束之后，浏览器关闭 TCP 连接
 
 那么让我们仔细分析上述每个过程，看看哪些地方可以做优化。
 
@@ -45,23 +45,96 @@
 
 ### 3. **服务器响应**
 
-- 重定向
+对于服务器响应这一块，首先，响应肯定要快，其次要直接，最后响应内容尺寸要尽量的小。
 
-> 服务器给浏览器响应一个 301 永久重定向响应，这样浏览器就会访问“http://www.facebook.com/” 而非“http://facebook.com/”。
+- **响应要快**
+
+  > 服务器响应用时衡量的是花费了多长时间来加载必要的 HTML 以开始呈现服务器所托管的网页，其中减去了 Google 和您的服务器之间的网络延迟时长。每次运行所用的时间可以有所不同，但这种差异不应太大。事实上，如果各次服务器响应在用时方面存在很大差异的话，则可能意味着有潜在的性能问题。
+  >
+  > 您应将服务器响应用时控制在 200 毫秒内。 很多潜在因素都可能会延缓服务器响应，例如缓慢的应用逻辑、缓慢的数据库查询、缓慢的路由、框架、库、资源 CPU 不足或内存不足。您需要充分考虑所有这些因素，才能改善服务器的响应用时。 若想找出服务器响应用时过长的原因，首先要进行衡量。然后，准备好相关数据，并参阅有关如何解决该问题的相应指导。当解决问题后，您必须继续衡量服务器响应用时，并设法应对任何会在将来出现的性能瓶颈问题。
+  >
+  > 1. 收集并检查现有性能和数据。若无可用内容，请使用自动化的网络应用监测解决方案（市面上有托管的开源版本，适用于大多数平台）进行评估，或添加自定义的方法。
+  > 2. 找出并修复首要的性能瓶颈问题。如果您使用的是热门网页框架或内容管理平台，请参阅与性能优化最佳做法相关的文档。
+  > 3. 监测并提醒任何会在将来出现的性能衰退问题！
+
+- **负载均衡**
+
+- **避免重定向**
+
+  - 尽量减少重定向
+
+    > 重定向会触发额外的 HTTP 请求-响应周期，并会拖慢网页呈现速度。在最好的情况下，每个重定向都会添加一次往返（HTTP 请求-响应）；而在最坏的情况下，除了额外的 HTTP 请求-响应周期外，它还可能会让更多次的往返执行 DNS 查找、TCP 握手和 TLS 协商。因此，您应尽可能减少对重定向的使用以提升网站性能。
+    >
+    > 以下是重定向模式的一些示例：
+    >
+    > - example.com 使用自适应网页设计，无需任何重定向 - 快速且理想！
+    > - example.com → m.example.com/home - 会导致移动设备用户遭遇多次往返。
+    > - example.com → www.example.com → m.example.com - 移动浏览体验非常缓慢。
+
+  - 关于为什么会重定向
+
+    > 服务器给浏览器响应一个 301 永久重定向响应，这样浏览器就会访问“http:// www.facebook.com/” 而非“http://facebook.com/”。
+    >
+    > 为什么服务器一定要重定向而不是直接发会用户想看的网页内容呢？这个问题有好 多有意思的答案。
+    >
+    > 其中一个原因跟搜索引擎排名有 关。你看，如果一个页面有两个地址，就像 http://www.igoro.com/ 和http://igoro.com/，搜索引擎会认为它们是两个网站， 结果造成每一个的搜索链接都减少从而降低排名。而搜索引擎知道 301 永久重定向是 什么意思，这样就会把访问带 www 的和不带 www 的地址归到同一个网站排名下。
+    >
+    > 还有一个是用不同的地址会造成缓存友好性变差。当一个页面有好几个名字时，它 可能会在缓存里出现好几次。
+
+- **开启 Gzip**
+
+  > 所有现代浏览器都支持 gzip 压缩并会为所有 HTTP 请求自动协商此类压缩。启用 gzip 压缩可大幅缩减所传输的响应的大小（最多可缩减 90%），从而显著缩短下载相应资源所需的时间、减少客户端的流量消耗并加快网页的首次呈现速度。
+
+- **协商缓存**
+
+- **开启 KeepAlive**
+
+### 4. **浏览器解析及渲染**
+
+用户看到页面的具体内容由 HTML 及 CSS 来决定，浏览器会先对这些数据进行解析并根据解析结果进行渲染：
+
+1. 浏览器将 HTML 解析为 **DOM**
+
+2. 将 CSS 解析为 **CSSOM**
+
+3. 将 **DOM** 与 **CSSOM** 合并为 **Render Tree**（渲染树）
+
+4. 根据 **Render Tree** 进行**Layout**（布局），即计算元素的具体位置（几何信息）。
+
+5. 布局完成后，就进入到了**Paint（绘制）**阶段，将各个节点绘制到屏幕上
+
+> 如果 DOM 或 CSSOM 被修改，您只能再执行一遍以上所有步骤，以确定哪些像素需要在屏幕上进行重新渲染。
 >
-> 为什么服务器一定要重定向而不是直接发会用户想看的网页内容呢？这个问题有好多有意思的答案。
->
-> 其中一个原因跟搜索引擎排名有 关。你看，如果一个页面有两个地址，就像http://www.igoro.com/ 和http://igoro.com/，搜索引擎会认为它们是两个网站，结果造成每一个的搜索链接都减少从而降低排名。而搜索引擎知道301永久重定向是 什么意思，这样就会把访问带 www 的和不带 www 的地址归到同一个网站排名下。
->
-> 还有一个是用不同的地址会造成缓存友好性变差。当一个页面有好几个名字时，它可能会在缓存里出现好几次。
+> **_优化关键渲染路径就是指最大限度缩短执行上述第 1 步至第 5 步耗费的总时间。_** 这样一来，就能尽快将内容渲染到屏幕上，此外还能缩短首次渲染后屏幕刷新的时间，即为交互式内容实现更高的刷新率。
 
-- 协商缓存
+很明显，过大的 DOM 树（节点层级深、节点过多）及复杂的 CSS 样式（box-shadow）都会显著的增加上述过程的时间。另外，默认情况下，CSS 被视为阻塞渲染的资源，即除非 CSSOM 构建完成，否则浏览器不会渲染任何内容，**外部引入的 CSS 文件**对这一点的影响更为明显，因为要想构建 CSSOM，就必须等待 CSS 文件下载完成，而文件下载可能比解析更耗时。
 
-- Gzip
+- **避免在首屏内容中包含会阻止内容呈现的外部 JavaScript 和 CSS**
 
-- 开启 KeepAlive
+  > 浏览器必须先解析网页，然后才能将其呈现给用户。如果浏览器在解析过程中遇到非异步或阻止呈现的外部脚本，则必须停止解析并且下载相应资源。每当发生这种情况时，都会增加一次网络往返过程，这势必会导致网页的首次呈现时间被延迟。
+  >
+  > 因此，用于呈现首屏内容的 JavaScript 和 CSS 应内嵌到网页中，而用于为网页增添附加功能的 JavaScript 或 CSS 应在 ATF 内容呈现完毕后再开始加载。
 
-### 4. **浏览器解析 HTML**
+- **CSS 媒体查询**
+
+  有些人会疑惑于为什么不能直接解析现有的 HTML 及 CSS 先用于渲染，而需要等待外部引入的 CSS 下载完成后才继续解析？这里直接引用[谷歌 web 开发文档](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/render-blocking-css)
+
+  > 在渲染树构建中，我们看到关键渲染路径要求我们同时具有 DOM 和 CSSOM 才能构建渲染树。这会给性能造成严重影响：HTML 和 CSS 都是阻塞渲染的资源。 HTML 显然是必需的，因为如果没有 DOM，我们就没有可渲染的内容，但 CSS 的必要性可能就不太明显。如果我们在 CSS 不阻塞渲染的情况下尝试渲染一个普通网页会怎样？
+  >
+  > ![有CSS](./nytimes-css-device.png) ![无CSS](./nytimes-nocss-device.png)
+  >
+  > 上例展示了纽约时报网站使用和不使用 CSS 的显示效果，它证明了为何要在 CSS 准备就绪之前阻塞渲染，————没有 CSS 的网页实际上无法使用。右侧的情况通常称为“内容样式短暂失效”(FOUC)。浏览器将阻塞渲染，直至 DOM 和 CSSOM 全都准备就绪。
+
+  不过，如果我们有一些 CSS 样式只在特定条件下（例如显示网页或将网页投影到大型显示器上时）使用，又该如何？_如果这些资源不阻塞渲染，该有多好。这样我们可以只下载首屏必须的 CSS 资源了，大大节省了时间（我们甚至可以把首屏的 CSS 资源直接放入 HTML 中）_。
+
+  我们可以通过 **_CSS“媒体类型”和“媒体查询”_** 来解决这类用例：
+
+  ```HTML
+  <link href="style.css" rel="stylesheet">
+  <link href="print.css" rel="stylesheet" media="print">
+  <link href="other.css" rel="stylesheet" media="(min-width: 40em)">
+  <link href="portrait.css" rel="stylesheet" media="orientation:portrait">
+  ```
 
 - **预加载与预链接**
 
@@ -69,36 +142,36 @@
   <link rel="preconnect" href="https://www.google.com" />
   ```
 
-  - **静态资源**
+- 静态资源
 
-    > 在浏览器显示 HTML 时，它会注意到需要获取其他地址内容的标签。这时，浏览器会 发送一个获取请求来重新获得这些文件。
-    >
-    > 下面是几个我们访问 facebook.com 时需要重获取的几个 URL：
-    >
-    > ```
-    >  图片
-    > http://static.ak.fbcdn.net/rsrc.php/z12E0/hash/8q2anwu7.gif
-    > http://static.ak.fbcdn.net/rsrc.php/zBS5C/hash/7hwy7at6.gif
-    > …
-    > CSS 式样表
-    > http://static.ak.fbcdn.net/rsrc.php/z448Z/hash/2plh8s4n.css
-    > http://static.ak.fbcdn.net/rsrc.php/zANE1/hash/cvtutcee.css
-    > …
-    > JavaScript 文件
-    > http://static.ak.fbcdn.net/rsrc.php/zEMOA/hash/c8yzb6ub.js
-    > http://static.ak.fbcdn.net/rsrc.php/z6R9L/hash/cq2lgbs8.js
-    > …
-    > ```
-    >
-    > 这些地址都要经历一个和 HTML 读取类似的过程。所以浏览器会在 DNS 中查找这些 域名，发送请求，重定向等等...
-    >
-    > 但 不像动态页面那样，静态文件会允许浏览器对其进行缓存。有的文件可能会不需 要与服务器通讯，而从缓存中直接读取。服务器的响应中包含了静态文件保存的期限 信息，所以浏览器知道要把它们缓存多长时间。还有，每个响应都可能包含像版本号一 样工作的 ETag 头（被请求变量的实体值），如果浏览器观察到文件的版本 ETag 信息 已经存在，就马上停止这个文件的传输。
-    >
-    > 试着猜猜看“fbcdn.net”在地址中代表什么？聪明的答案是"Facebook 内容分发网络 "。Facebook 利用内容分发网络（CDN）分发像图片，CSS 表和 JavaScript 文件这些 静态文件。所以，这些文件会在全球很多 CDN 的数据中心中留下备份。
-    >
-    > 静态内容往往代表站点的带宽大小，也能通过 CDN 轻松的复制。通常网站会使用第 三方的 CDN。例如，Facebook 的静态文件由最大的 CDN 提供商 Akamai 来托管。
-    >
-    > 举例来讲，当你试着 ping static.ak.fbcdn.net 的时候，可能会从某个 akamai. net 服务器上获得响应。有意思的是，当你同样再 ping 一次的时候，响应的服务器可 能就不一样，这说明幕后的负载平衡开始起作用了。
+  > 在浏览器显示 HTML 时，它会注意到需要获取其他地址内容的标签。这时，浏览器会 发送一个获取请求来重新获得这些文件。
+  >
+  > 下面是几个我们访问 facebook.com 时需要重获取的几个 URL：
+  >
+  > ```
+  >  图片
+  > http://static.ak.fbcdn.net/rsrc.php/z12E0/hash/8q2anwu7.gif
+  > http://static.ak.fbcdn.net/rsrc.php/zBS5C/hash/7hwy7at6.gif
+  > …
+  > CSS 式样表
+  > http://static.ak.fbcdn.net/rsrc.php/z448Z/hash/2plh8s4n.css
+  > http://static.ak.fbcdn.net/rsrc.php/zANE1/hash/cvtutcee.css
+  > …
+  > JavaScript 文件
+  > http://static.ak.fbcdn.net/rsrc.php/zEMOA/hash/c8yzb6ub.js
+  > http://static.ak.fbcdn.net/rsrc.php/z6R9L/hash/cq2lgbs8.js
+  > …
+  > ```
+  >
+  > 这些地址都要经历一个和 HTML 读取类似的过程。所以浏览器会在 DNS 中查找这些 域名，发送请求，重定向等等...
+  >
+  > 但 不像动态页面那样，静态文件会允许浏览器对其进行缓存。有的文件可能会不需 要与服务器通讯，而从缓存中直接读取。服务器的响应中包含了静态文件保存的期限 信息，所以浏览器知道要把它们缓存多长时间。还有，每个响应都可能包含像版本号一 样工作的 ETag 头（被请求变量的实体值），如果浏览器观察到文件的版本 ETag 信息 已经存在，就马上停止这个文件的传输。
+  >
+  > 试着猜猜看“fbcdn.net”在地址中代表什么？聪明的答案是"Facebook 内容分发网络 "。Facebook 利用内容分发网络（CDN）分发像图片，CSS 表和 JavaScript 文件这些 静态文件。所以，这些文件会在全球很多 CDN 的数据中心中留下备份。
+  >
+  > 静态内容往往代表站点的带宽大小，也能通过 CDN 轻松的复制。通常网站会使用第 三方的 CDN。例如，Facebook 的静态文件由最大的 CDN 提供商 Akamai 来托管。
+  >
+  > 举例来讲，当你试着 ping static.ak.fbcdn.net 的时候，可能会从某个 akamai. net 服务器上获得响应。有意思的是，当你同样再 ping 一次的时候，响应的服务器可 能就不一样，这说明幕后的负载平衡开始起作用了。
 
 参考：
 
@@ -108,3 +181,19 @@
 - [并发连接数对浏览器加载速度的测试](https://www.iefans.net/bingfa-lianjieshu-sudu-ceshi/)
 
 - [常见的前端性能优化手段都有哪些？都有多大收益？](https://www.zhihu.com/question/40505685)
+
+- [Why do big sites host their images/css on external domains?](https://webmasters.stackexchange.com/questions/26753/why-do-big-sites-host-their-images-css-on-external-domains)
+
+- [在 PageSpeed Insights 中针对网站进行移动设备浏览体验分析](https://developers.google.com/speed/docs/insights/mobile)
+
+- [PageSpeed Insights 规则](https://developers.google.com/speed/docs/insights/rules)
+
+- [Optimizing Encoding and Transfer Size of Text-Based Assets](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/optimize-encoding-and-transfer#text-compression-with-gzip)
+
+- [优化图片](https://developers.google.com/speed/docs/insights/OptimizeImages)
+
+- [Fast Load Times](https://web.dev/fast)
+
+- [阻塞渲染的 CSS](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/render-blocking-css)
+
+- [尽可能减少浏览器重排](https://developers.google.com/speed/docs/insights/browser-reflow)
