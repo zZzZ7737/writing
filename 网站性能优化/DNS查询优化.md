@@ -26,6 +26,8 @@ DNS 查找的各个环节会对查找结果做缓存，从而提高下次查询�
 
 ### 四、CNAME（别名记录）
 
+### 五、利用 dns-prefetch 预解析 DNS
+
 参考：
 
 1. [网站速度优化之 DNS 与拆分域名](http://www.baiwanzhan.com/site/t121469/)
