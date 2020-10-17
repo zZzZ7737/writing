@@ -14,20 +14,6 @@
 
 > 实数：包括有理数与无理数，即：整数、分数、无限不循环小数。数学上，实数与数轴上的点一一对应。
 
-> 双精度：https://www.zhihu.com/question/26022206。
-
-参考文档：
-
-\[1\]: [在编程中，为什么要把小数叫做浮点数？](https://baijiahao.baidu.com/s?id=1618173300159774003&wfr=spider&for=pc)
-
-\[2\]: [单精度与双精度是什么意思，有什么区别？](https://www.zhihu.com/question/26022206)
-
-\[3\]: [浮点数的原理简析](https://blog.csdn.net/whyel/article/details/81067989)
-
-\[4\]: [ECMAScript 中的 Number Type 与 IEEE 754-2008](https://blog.csdn.net/weixin_34406061/article/details/91368415)
-
-\[5\]: [IEEE 754 浮点数标准中 64 位浮点数为什么指数偏移量是 1023？](https://segmentfault.com/q/1010000016401244)
-
 ## 计算机中数的存储与表示
 
 在计算机中，数据以二进制存储，也就是说不存在小数、整数、负数的概念，所以我们在计算机中存储表示数时需要用一种特殊的方式处理，即：浮点数。根据 IEEE754 标准规定，**浮点数由“符号”、“指数”和“尾数”3 部分构成**。
@@ -164,3 +150,17 @@ f 有 24 位，最后一个 1 只能舍弃，也就成了：
 ## javascript 中的`0.1+0.2`问题
 
 未完待续。。。
+
+参考文档：
+
+\[1\]: [在编程中，为什么要把小数叫做浮点数？](https://baijiahao.baidu.com/s?id=1618173300159774003&wfr=spider&for=pc)
+
+\[2\]: [单精度与双精度是什么意思，有什么区别？](https://www.zhihu.com/question/26022206)
+
+\[3\]: [浮点数的原理简析](https://blog.csdn.net/whyel/article/details/81067989)
+
+\[4\]: [ECMAScript 中的 Number Type 与 IEEE 754-2008](https://blog.csdn.net/weixin_34406061/article/details/91368415)
+
+\[5\]: [IEEE 754 浮点数标准中 64 位浮点数为什么指数偏移量是 1023？](https://segmentfault.com/q/1010000016401244)
+
+\[6\]: [双精度](https://www.zhihu.com/question/26022206)
