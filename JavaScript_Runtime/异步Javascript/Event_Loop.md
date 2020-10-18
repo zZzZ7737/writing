@@ -14,7 +14,7 @@ JavaScript 是一个单线程、非阻塞、异步、解释执行的脚本语言
 
 单线程跟异步？有的人可能会想，这不是互相矛盾吗？事实上，JavaScript 作为一个单线程执行的语言，确实不能实现异步，但是 _JavaScript 的 runtime（浏览器、NodeJs）_ 可以是多线程的。
 
-**I/O 操作、定时器、事件监听等异步操作，都是 JavaScript runtime 通过其他线程来完成的。换句话说，像`setTimeout`这种 API 其实是 _JavaScript runtime_ 提供的，而不是 _JavaScript 引擎（如：V8）_ 提供的。**
+**I/O 操作、定时器、事件监听等异步操作，都是 JavaScript runtime 通过其他线程来完成的。换句话说，像`setTimeout`这种 API 其实是 _JavaScript runtime_ 提供的，而不是 _JavaScript 引擎（如：V8）_ 提供的。** 例如：[Timers](https://html.spec.whatwg.org/#timers)
 
 在浏览器中，通过[webAPI](https://developer.mozilla.org/zh-CN/docs/Web/API)给 JavaScript 提供异步实现。Node.js 中通过[libuv](https://github.com/libuv/libuv)给 JavaScript 提供异步功能实现。
 
@@ -61,3 +61,5 @@ three()
 - [Event Loop](https://html.spec.whatwg.org/#event-loops)
 
 - [Tasks, microtasks, queues and schedules](https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/?utm_source=html5weekly)
+
+- [Timers - HTML Standard](https://html.spec.whatwg.org/#timers)
