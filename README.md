@@ -1,3 +1,8 @@
 >
 
-记录思考 `z2Z `
+学会思考 `z2Z `
+
+### **TODO**
+
+- HTTP
+- Event Loop
