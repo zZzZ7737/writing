@@ -1,11 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 345 535">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 345 535" id='parsingmodel'>
 
-<!-- === definitions === -->
 
 <style>
- :root { font: 14px sans-serif, Droid Sans Fallback; }
- .code { font-family: monospace; }
- .bit, rect, path { filter: url(#dropshadow); }
+  <![CDATA[
+
+    #parsingmodel{
+      background: #fff;
+    }
+  
+  ]]>
 </style>
 
 <filter id="dropshadow" height="130%">
