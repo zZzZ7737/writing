@@ -70,8 +70,8 @@ Keep-Alive: timeout=15, max = 10
 
 > 当 HTTP 报文首部中出现了两个或两个以上具有相同首部字段名时会怎么样？这种情况在规范内尚未明确，根据浏览器内部处理逻辑的不同，结果可能并不一致。有些浏览器会优先处理第一次出现的首部字段，而有些则会优先处理最后出现的首部字段。
 
-![报文格式1](./http_message.jpg)
-![报文格式2](./http_message_2.jpg)
+![报文格式1](./assets/http_message.jpg)
+![报文格式2](./assets/http_message_2.jpg)
 
 我们可以使用 Node.js 起一个 TCP 服务器，来具体看看 http 协议报文的内容：
 
@@ -149,7 +149,7 @@ Accept-Ranges: bytes
 
 数字中的第一位指定了响应类别，后两位无分类。响应类别有以下 5 种：
 
-![状态码](./status_code.jpg)
+![状态码](./assets/status_code.jpg)
 
 只要遵守状态码类别的定义，即使改变 RFC2616 中定义的状态码，或服务器端自行创建状态码都没问题。
 
@@ -244,23 +244,23 @@ HTTP/1.1 规范定义了 47 种首部字段。
 
 请求报文和响应报文两方都会使用的首部。
 
-![通用首部字段](./general_header_fields.jpg)
+![通用首部字段](./assets/general_header_fields.jpg)
 
 ### **请求首部字段**
 
 从客户端向服务器端发送请求报文时使用的首部。补充了请求的附加内容、客户端信息、响应内容相关优先级等信息。
 
-![请求首部字段](./request_header_fields.jpg)
+![请求首部字段](./assets/request_header_fields.jpg)
 
 ### **响应首部字段**
 
 从服务器端向客户端返回响应报文时使用的首部。补充了响应的附加内容，也会要求客户端附加额外的内容信息。
 
-![响应首部字段](./response_header_fields.jpg)
+![响应首部字段](./assets/response_header_fields.jpg)
 
 ### **实体首部字段**
 
-![实体首部字段](./entity_header_fields.jpg)
+![实体首部字段](./assets/entity_header_fields.jpg)
 
 针对请求报文和响应报文的实体部分使用的首部。补充了资源内容更新时间等与实体有关的信息。
 
